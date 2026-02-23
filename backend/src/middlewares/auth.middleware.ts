@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { validateToken } from "../utils/auth.utils";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../config/prisma";
 
 export const isUserLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
   try {

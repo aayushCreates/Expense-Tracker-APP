@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { getJWT, getPasswordHash, validatePassword } from "../utils/auth.utils";
+import prisma from "../config/prisma";
 
-
-const prisma = new PrismaClient();
 
 export default class AuthServices {
   static async registerService(
