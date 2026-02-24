@@ -1,19 +1,21 @@
 import { Router } from "express";
 import { isUserLoggedIn } from "../middlewares/auth.middleware";
 import {
-  addTransaction,
-  allTransactions,
-  deleteTransaction,
-  transaction,
-  updateTransaction,
+  addExpense,
+  getAllExpenses,
+  deleteExpense,
+  getExpenseById,
+  getExpenseSummary,
+  updateExpense,
 } from "../controllers/expense.controller";
 
 const expenseRouter = Router();
 
-expenseRouter.get("/", isUserLoggedIn, allTransactions);
-expenseRouter.get("/:id", isUserLoggedIn, transaction);
-expenseRouter.post("/", isUserLoggedIn, addTransaction);
-expenseRouter.patch("/edit", isUserLoggedIn, updateTransaction);
-expenseRouter.delete("/remove", isUserLoggedIn, deleteTransaction);
+expenseRouter.get("/", isUserLoggedIn, getAllExpenses);
+expenseRouter.get("/summary", isUserLoggedIn, getExpenseSummary);
+expenseRouter.get("/:id", isUserLoggedIn, getExpenseById);
+expenseRouter.post("/", isUserLoggedIn, addExpense);
+expenseRouter.patch("/edit", isUserLoggedIn, updateExpense);
+expenseRouter.delete("/remove", isUserLoggedIn, deleteExpense);
 
 export default expenseRouter;

@@ -48,7 +48,7 @@ export default class ExpenseServices {
   static async updateExpense(
     userId: string,
     expenseId: string,
-    data: ExpenseType
+    data: Partial<ExpenseType>
   ) {
     const updateData: any = {};
     
@@ -77,5 +77,41 @@ export default class ExpenseServices {
     });
 
     return deletedExpense;
+  }
+
+  static async getExpensesSummary(userId: string) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { income: true },
+    });
+
+    const totalExpenses = await prisma.expense.aggregate({
+      where: { userId },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    const categoryBreakdown = await prisma.expense.groupBy({
+      by: ["category"],
+      where: { userId },
+      _sum: {
+        amount: true,
+      },
+    });
+
+    const totalIncome = user?.income || 0;
+    const totalSpent = Number(totalExpenses._sum.amount) || 0;
+    const balance = totalIncome - totalSpent;
+
+    return {
+      totalIncome,
+      totalSpent,
+      balance,
+      categoryBreakdown: categoryBreakdown.map((item) => ({
+        category: item.category,
+        amount: Number(item._sum.amount) || 0,
+      })),
+    };
   }
 }

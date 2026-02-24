@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import ExpenseServices from "../services/expense.service";
 
-export const addTransaction = async (
+export const addExpense = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -28,19 +28,19 @@ export const addTransaction = async (
 
     return res.status(201).json({
       success: true,
-      message: "Transaction added successfully",
+      message: "Expense added successfully",
       data: newExpense,
     });
   } catch (err) {
-    console.error("Add transaction Error:", err);
+    console.error("Add expense Error:", err);
     return res.status(500).json({
       success: false,
-      message: "Error in adding transaction",
+      message: "Error in adding expense",
     });
   }
 };
 
-export const allTransactions = async (
+export const getAllExpenses = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -57,15 +57,15 @@ export const allTransactions = async (
       data: expenses,
     });
   } catch (err) {
-    console.error("All transactions Error:", err);
+    console.error("All expenses Error:", err);
     return res.status(500).json({
       success: false,
-      message: "Error in fetching transactions",
+      message: "Error in fetching expenses",
     });
   }
 };
 
-export const transaction = async (
+export const getExpenseById = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -81,7 +81,7 @@ export const transaction = async (
     if (!expense) {
       return res.status(404).json({
         success: false,
-        message: "Transaction not found",
+        message: "Expense not found",
       });
     }
 
@@ -90,15 +90,15 @@ export const transaction = async (
       data: expense,
     });
   } catch (err) {
-    console.error("Single transaction Error:", err);
+    console.error("Single expense Error:", err);
     return res.status(500).json({
       success: false,
-      message: "Error in fetching transaction",
+      message: "Error in fetching expense",
     });
   }
 };
 
-export const updateTransaction = async (
+export const updateExpense = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -108,7 +108,7 @@ export const updateTransaction = async (
     if (!id) {
       return res.status(400).json({
         success: false,
-        message: "Transaction ID is required",
+        message: "Expense ID is required",
       });
     }
 
@@ -130,19 +130,19 @@ export const updateTransaction = async (
 
     return res.status(200).json({
       success: true,
-      message: "Transaction updated successfully",
+      message: "Expense updated successfully",
       data: updatedExpense,
     });
   } catch (err) {
-    console.error("Update transaction Error:", err);
+    console.error("Update expense Error:", err);
     return res.status(500).json({
       success: false,
-      message: "Error in updating transaction",
+      message: "Error in updating expense",
     });
   }
 };
 
-export const deleteTransaction = async (
+export const deleteExpense = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -152,7 +152,7 @@ export const deleteTransaction = async (
     if (!id) {
       return res.status(400).json({
         success: false,
-        message: "Transaction ID is required",
+        message: "Expense ID is required",
       });
     }
 
@@ -164,47 +164,39 @@ export const deleteTransaction = async (
 
     return res.status(200).json({
       success: true,
-      message: "Transaction deleted successfully",
+      message: "Expense deleted successfully",
     });
   } catch (err) {
-    console.error("Delete transaction Error:", err);
+    console.error("Delete expense Error:", err);
     return res.status(500).json({
       success: false,
-      message: "Error in deleting transaction",
+      message: "Error in deleting expense",
     });
   }
 };
 
-export const transactionSummary = async (
+export const getExpenseSummary = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { id } = req.body;
-    if (!id) {
-      return res.status(400).json({
-        success: false,
-        message: "Transaction ID is required",
-      });
-    }
-
     if (!req.user) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    await ExpenseServices.getExpensesSummary(req.user.id, id);
+    const summary = await ExpenseServices.getExpensesSummary(req.user.id);
 
     return res.status(200).json({
       success: true,
-      message: "Transaction deleted successfully",
+      message: "Expense summary fetched successfully",
+      data: summary,
     });
   } catch (err) {
-    console.error("Delete transaction Error:", err);
+    console.error("Expense summary Error:", err);
     return res.status(500).json({
       success: false,
-      message: "Error in deleting transaction",
+      message: "Error in fetching expense summary",
     });
   }
 };
-
