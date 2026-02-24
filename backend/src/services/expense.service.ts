@@ -1,5 +1,7 @@
 import { Category } from "@prisma/client";
-import prisma from "../config/prisma";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 interface ExpenseType {
   category: Category;
