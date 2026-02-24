@@ -174,3 +174,37 @@ export const deleteTransaction = async (
     });
   }
 };
+
+export const transactionSummary = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Transaction ID is required",
+      });
+    }
+
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    await ExpenseServices.getExpensesSummary(req.user.id, id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Transaction deleted successfully",
+    });
+  } catch (err) {
+    console.error("Delete transaction Error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Error in deleting transaction",
+    });
+  }
+};
+
